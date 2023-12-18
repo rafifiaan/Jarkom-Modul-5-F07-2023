@@ -206,11 +206,11 @@ Prefix IP **10.55.x.x**
     ```
 
 ### Routing & DHCP Config
-- **Routing**
 ```
-# template
+# Routing Template
 # route add -net <NID subnet> netmask <netmask> gw <IP gateway>
 ```
+- **Routing**
   - Aura
     ```
     # A5
