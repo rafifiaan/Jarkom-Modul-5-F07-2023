@@ -23,7 +23,7 @@ Prefix IP **10.55.x.x**
 - [Preparation](#preparation)
     - [Topology](#topology)
     - [Node Config](#node-configuration)
-    - [Subnetting & Routing]()
+    - [Subnetting & Routing](#subnetting--routing)
     - [Routing & DHCP Config](#routing--dhcp-config)
 - [Question 1](#question-1)
 - [Question 2](#question-2)
