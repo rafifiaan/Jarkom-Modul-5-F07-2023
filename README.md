@@ -405,6 +405,50 @@ Prefix IP **10.55.x.x**
 ## Question 6
 > Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
 
+Untuk membatasi akses pada WebServer di waktu-waktu tertentu, perlu menambahkan sedikit rule pada WebServer. Masukkan aturan/rule berikut:
+```
+# Tolak koneksi SSH dari GrobeForest ke Sein dan/atau Stark pada istirahat makan siang (Senin-Jumat, 12:00-13:00)
+iptables -A INPUT -p tcp --dport 22 -s 10.55.4.4 -m time --timestart 12:00 --timestop 13:00 --weekdays Mon,Tue,Wed,Thu -j DROP
+
+# Tolak koneksi SSH dari GrobeForest ke Sein dan/atau Stark pada saat Jumatan (Jumat, 11:00-13:00)
+iptables -A INPUT -p tcp --dport 22 -s 10.55.4.4 -m time --timestart 11:00 --timestop 13:00 --weekdays Fri -j DROP
+```
+
+Atur waktu untuk keperluan testing (Contoh di jam 12:45 di hari Selasa tanggal 19 Desember 2023)
+```
+date --set="2023-12-19 12:45:00"
+```
+
+Setelah itu pada **Sein/Stark** jalankan command berikut:
+```
+nc -l -p 22
+```
+
+Kemudian, Testing dilakukan pada **GrobeForest** dengan menjalankan command berikut:
+```
+nc [ip Sein/Stark] 22
+```
+
+Dan masukkan pesan bebas. Hasilnya jika berhasil pesan yang dikirimkan dari GrabeForest tidak akan masuk pada Sein/Stark.
+
+- Tes di Hari Senin-Kamis pada Jam 12:00 - 13:00
+
+![tesSein](img/6-SeinTest.png)
+
+![tesStark](img/6-StarkTest.png)
+
+- Test di hari Jumat pada Jam 11:00 - 13:00
+
+![tesSein2](img/6-SeinTest-2.png)
+
+![tesStark2](img/6-StarkTest-2.png)
+
+Testing juga bisa dilakukan dengan melakukan ping pada IP + Port yang telah ditetapkan rule
+
+![pingSeinTest](img/6-PingtestSein.png)
+
+![pingStarkTest](img/6-PingtestStark.png)
+
 
 ## Question 7
 > Karena terdapat 2 WebServer, kalian diminta agar setiap client yang mengakses Sein dengan Port 80 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan dan request dari client yang mengakses Stark dengan port 443 akan didistribusikan secara bergantian pada Sein dan Stark secara berurutan.
@@ -432,6 +476,7 @@ while true; do nc -l -p 443 -c 'echo "di-handle oleh Sein"'; done
 ```
 
 **Port 80:**
+
 ![7-80Stark](img/7-80Stark.png)
 ![7-80Sein](img/7-80Sein.png)
 
@@ -452,6 +497,23 @@ Hasil-nya akan menunjukkan Port di-handle secara bergantian oleh Sein dan Stark.
 
 ## Question 8
 > Karena berbeda koalisi politik, maka subnet dengan masyarakat yang berada pada Revolte dilarang keras mengakses WebServer hingga masa pencoblosan pemilu kepala suku 2024 berakhir. Masa pemilu (hingga pemungutan dan penghitungan suara selesai) kepala suku bersamaan dengan masa pemilu Presiden dan Wakil Presiden Indonesia 2024.
+
+Untuk melakukan pembatasan pada **Revolte** dalam mengakses WebServer, dilakukan beberapa aturan pada **Stark/Sein** dengan menambahkan aturan berikut:
+```
+iptables -F
+iptables -A INPUT -s 10.55.0.20/30 -p tcp --dport 80 -m time --datestart "2023-12-16" --datestop "2024-03-20" -j DROP
+```
+
+Sekarang sudah termasuk "Masa Pemilu" dan 20 Maret 2024 merupakan tanggal akhir "Rekapitulasi Pemungutan Suara"
+
+Setelah itu, lakukan testing dengan memasukkan command berikut:
+```
+nmap [ip Stark/Sein] 80
+```
+
+![8-test](img/8-testing.png)
+
+Hasil pada Revolte terindikasi Filtered/Gagal sedangkan pada LaubHills terindikasi aman.
 
 
 ## Question 9
