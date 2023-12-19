@@ -519,6 +519,37 @@ Hasil pada Revolte terindikasi Filtered/Gagal sedangkan pada LaubHills terindika
 ## Question 9
 > Sadar akan adanya potensial saling serang antar kubu politik, maka WebServer harus dapat secara otomatis memblokir  alamat IP yang melakukan scanning port dalam jumlah banyak (maksimal 20 scan port) di dalam selang waktu 10 menit. (clue: test dengan nmap)
 
+Dalam penyelesaian nya dibutuhkan beberapa aturan/rule pada WebServer, seperti berikut:
+
+Pertama, diperlukan pembuatan rantai iptables baru untuk scanning port dengan nama "scan_port" 
+```
+iptables -N scan_port
+```
+
+Setelah itu Melakukan pengecekan dan blokir jika terdapat lebih dari 20 pemindaian port dari alamat IP yang sama dalam waktu kurang dari 10 menit. Serta menentukan jumlah pemindaian port yang diizinkan dalam periode waktu yang telah ditentukan yaitu 20.
+```
+iptables -A INPUT -m recent --name scan_port --update --seconds 600 --hitcount 20 -j DROP
+iptables -A FORWARD -m recent --name scan_port --update --seconds 600 --hitcount 20 -j DROP
+```
+
+Kemudian tambahkan rule untuk menerima pemindaian baru, jika alamat IP pemindainya (IP yang melakukan scanning port) baru harus ditambahkan ke dalam "recent" list dan paket akan diterima (ACCEPT).
+```
+iptables -A INPUT -m recent --name scan_port --set -j ACCEPT
+iptables -A FORWARD -m recent --name scan_port --set -j ACCEPT
+```
+
+Hasil running rule:
+
+![9-iptables](img/9-iptables.png)
+
+Dan testing dapat dilakukan pada Host/Node selain Stark & Sein dengan melakukan ping pada ip Stark/Sein:
+```
+ping [ip Stark/Sein]
+```
+
+![9-test](img/9-test.png)
+
+Dapat dilihat bahwa paket yang diterima hanya sampai *20 packet* dan sisanya terhitung error dengan akurasi *packet loss* seperti yang tertera pada gambar. 
 
 
 ## Question 10
