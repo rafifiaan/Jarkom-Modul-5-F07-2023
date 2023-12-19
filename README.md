@@ -23,6 +23,7 @@ Prefix IP **10.55.x.x**
 - [Preparation](#preparation)
     - [Topology](#topology)
     - [Node Config](#node-configuration)
+    - [Subnetting & Routing]()
     - [Routing & DHCP Config](#routing--dhcp-config)
 - [Question 1](#question-1)
 - [Question 2](#question-2)
@@ -39,6 +40,9 @@ Prefix IP **10.55.x.x**
 ## Preparation
 ### Topology
 ![topof07](img/topology.png)
+
+### Subnetting & Routing
+Untuk Pembagian Subnet, IP, Perhitungan VLSM, Tree VLSM, Subnetting dan juga Routing dapat diakses atau dilihat pada link [berikut](https://docs.google.com/spreadsheets/d/1U4_PVoLywDhOSbDzXarHsa6SbyRofl-Nl2wuEeesBkE/edit?usp=sharing). Jika tidak dapat diakses, dapat dilihat pada file Excel yang tertera pada Repository.
 
 ### Node Configuration
 - **Router**
