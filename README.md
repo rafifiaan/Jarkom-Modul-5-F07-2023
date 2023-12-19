@@ -555,5 +555,23 @@ Dapat dilihat bahwa paket yang diterima hanya sampai *20 packet* dan sisanya ter
 ## Question 10
 > Karena kepala suku ingin tau paket apa saja yang di-drop, maka di setiap node server dan router ditambahkan logging paket yang di-drop dengan standard syslog level. 
 
+Pada WebServer perlu ditambahkan 1 rule LOG seperti berikut:
+```
+iptables -A INPUT  -j LOG --log-level debug --log-prefix 'Package Dropped' -m limit --limit 1/second --limit-burst 10
+```
+
+Batas/Limit jumlah log yang bisa dilakukan dalam 1 waktu yaitu 10 dengan 1 log/s. Jika rule telah dijalankan maka dapat di-check menggunakan `iptables -L`
+
+![10-testing](img/10-testing.png)
+
+Hasil dapat dilihat bahwa terdapat rule bertipe LOG untuk melihat paket yang telah dropped.
+
 
 ## Obstacle
+- Sempat mengalami kendala saat melakukan pembuktian waktu (hari, tanggal, jam)
+- Untuk mengatasi poin 1 akhirnya diatur manual menggunakan `date --set`
+- Sempat eror pada Soal Distribusi Paket, tapi akhirnya dicoba lagi bisa
+
+
+## Ucapan manis dari Kita! 
+Thank you Jaringan Komputer 2023, dengan semua orang-orang hebat didalamnya. We are both proud of all of you. Well done, see u on top. ❤️🙏🏻
