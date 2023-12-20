@@ -414,6 +414,38 @@ Diperoleh hasil sebagai berikut
 ## Question 2
 > Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
 
+Untuk memenuhi permintaan soal, kita dapat menambahkan pengaturan pada node host, untuk pembahasan kali ini, dimisalkan pada salah satunya, yaitu GrobeForest.
+```
+iptables -F
+
+# Drop semua koneksi UDP
+iptables -A INPUT -p udp -j DROP
+
+# Drop semua koneksi TCP kecuali port 8080
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -p tcp -j DROP
+```
+
+Pada pengaturan tersebut, terlebih dahulu dilakukan `Flush` untuk memastikan tidak ada rules lain pada node tersebut. Setelah itu, ditambahkan aturan yang melakukan DROP terhadap semua koneksi UDP, maupun TCP, namun untuk TCP dikecualikan bagi koneksi yang menuju port 8080, dengan kata lain, diizinkan (ACCEPT) khusus koneksi port 8080 TCP pada node GrobeForest tersebut. Pengujian dilakukan dengan menggunakan `netcat`, oleh karena itu perlu dilakukan instalasi `netcat` dengan perintah berikut.
+```
+apt-get update
+apt-get install netcat -y
+```
+
+Instalasi tersebut juga dilakukan pada node yang akan digunakan untuk testing koneksi ke GrobeForest, misalnya disini menggunakan node Sein. Setelah instalasi netcat, lakukan testing dengan cara berikut.
+
+buka koneksi port `8080` di GrobeForest dengan perintah berikut
+```
+nc -l -p 8080
+```
+
+Lalu hubungkan koneksi dari Sein dengan perintah berikut
+```
+nc [ip GrobeForest] 8080
+```
+*IP GrobeForest bersifat dinamis, sehingga perlu diperiksa terlebih dahulu IP-nya. Setelah itu lakukan percakapan atau pertukaran pesan antara kedua node. Untuk test blokir pada selain port `8080`, dapat mengikuti langkah yang sama, namun mengganti nomor port-nya. Berikut hasil test-nya.
+
+![tesDropTCPUDP](img/no2.png)
 
 ## Question 3
 > Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
