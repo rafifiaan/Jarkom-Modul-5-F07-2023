@@ -501,7 +501,7 @@ Diperoleh hasil sebagai berikut
 
 ![tesAcceptGrobe](img/no4.png)
 
-Dapat dilihat, setelah terlebih dahulu diuji oleh GrobeForest, lalu diuji lagi dengan menggunakan node lain, web server Sein hanya melayani koneksi SSH dari GrobeForest, sehingga terjadi pertukaran pesan, namun Sein tidak menerima koneksi dari node lain, pada pengujian ini yaitu TurkRegion.
+Dapat dilihat, setelah terlebih dahulu diuji oleh GrobeForest, lalu diuji lagi dengan menggunakan node lain. Web server Sein hanya melayani koneksi SSH dari GrobeForest dan memungkinkan terjadinya pertukaran pesan, namun Sein tidak menerima koneksi dari node lain seperti yang ditunjukkan pada pengujian ini yaitu TurkRegion.
 
 ## Question 5
 > Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
