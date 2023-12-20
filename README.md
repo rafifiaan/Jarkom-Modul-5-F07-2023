@@ -409,6 +409,8 @@ ping google.com
 
 Diperoleh hasil sebagai berikut
 
+![tesNat](img/no1.png)
+
 ## Question 2
 > Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
 
