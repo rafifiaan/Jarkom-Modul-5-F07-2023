@@ -473,6 +473,33 @@ Dari gambar tersebut, terdapat 3 node yang bisa melakukan ping ke Revolte (IP : 
 ## Question 4
 > Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
 
+Untuk pembatasan koneksi tersebut, kita dapat melakukan pengaturan yang melibatkan port 22, yaitu default port untuk koneksi SSH. Berikut pengaturan yang ditambahkan pada node web server Sein dan Stark
+```
+iptables -F
+
+# Izinkan koneksi SSH (port 22) dari GrobeForest ke Stark atau/dan Sein
+# ketahui terlebih dahulu IP dari GrobeForest karena IP-nya dinamis - berubah setiap reload node
+iptables -A INPUT -p tcp --dport 22 -s 10.55.4.4 -j ACCEPT
+
+# Tolak koneksi SSH (port 22) dari sumber lainnya
+iptables -A INPUT -p tcp --dport 22 -j DROP
+```
+Pada pengaturan di atas, perlu diketahui terlebih dahulu IP dari GrobeForest karena IP-nya dinamis. Untuk contoh pengaturan di atas, IP GrobeForest yang digunakan yaitu 10.55.4.4.
+
+Untuk pengujian dapat kembali menggunakan netcat dengan diawali membuka koneksi port 22 pada web server, disini dicontohkan menggunakan Sein. (Pastikan telah melakukan instalasi netcat pada node yang terlibat dalam pengujan ini).
+```
+nc -l -p 22
+```
+
+Setelah itu dilakukan uji koneksi dengan menggunakan GrobeForest dan satu node lain, misalnya disini TurkRegion. Pengujian dilakukan bergantian.
+```
+nc [IP Sein] 22
+```
+Diperoleh hasil sebagai berikut
+
+![tesAcceptGrobe](img/no4.png)
+
+Dapat dilihat, setelah terlebih dahulu diuji oleh GrobeForest, lalu diuji lagi dengan menggunakan node lain, web server Sein hanya melayani koneksi SSH dari GrobeForest, sehingga terjadi pertukaran pesan, namun Sein tidak menerima koneksi dari node lain, pada pengujian ini yaitu TurkRegion.
 
 ## Question 5
 > Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
