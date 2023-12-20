@@ -443,7 +443,9 @@ Lalu hubungkan koneksi dari Sein dengan perintah berikut
 ```
 nc [ip GrobeForest] 8080
 ```
-*IP GrobeForest bersifat dinamis, sehingga perlu diperiksa terlebih dahulu IP-nya. Setelah itu lakukan percakapan atau pertukaran pesan antara kedua node. Untuk test blokir pada selain port `8080`, dapat mengikuti langkah yang sama, namun mengganti nomor port-nya. Berikut hasil test-nya.
+_*IP GrobeForest bersifat dinamis, sehingga perlu diperiksa terlebih dahulu IP-nya._ 
+
+Setelah itu lakukan percakapan atau pertukaran pesan antara kedua node. Untuk test blokir pada selain port `8080`, dapat mengikuti langkah yang sama, namun mengganti nomor port-nya. Berikut hasil test-nya.
 
 ![tesDropTCPUDP](img/no2.png)
 
