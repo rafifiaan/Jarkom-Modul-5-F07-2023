@@ -447,9 +447,28 @@ nc [ip GrobeForest] 8080
 
 ![tesDropTCPUDP](img/no2.png)
 
+Dapat dilihat pertukaran pesan melalui port `8080` dapat dilakukan, namun tidak untuk port selain `8080`, pada contoh di atas yaitu `8081`
+
 ## Question 3
 > Kepala Suku North Area meminta kalian untuk membatasi DHCP dan DNS Server hanya dapat dilakukan ping oleh maksimal 3 device secara bersamaan, selebihnya akan di drop.
 
+Untuk melakukan pembatasan jumlah ping ini, dapat ditambahkan pengaturan berikut pada node-node yang bertugas sebagai DHCP Server yaitu Revolte dan DNS Server yaitu Richter. 
+```
+iptables -F
+
+# status ESTABLISHED mengacu pada koneksi yang sudah terbentuk, sedangkan RELATED mengacu pada koneksi yang terkait dengan koneksi yang sudah ada
+# mengizinkan paket yang terkait dengan koneksi yang sudah ada atau yang sudah mapan. 
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# menolak lalu lintas ping jika jumlah koneksi melebihi batas 3
+iptables -A INPUT -p icmp -m connlimit --connlimit-above 3 --connlimit-mask 0 -j DROP
+```
+
+Testing dapat dilakukan dengan melakukan ping pada node Revolte atau Richter tersebut (ping ke IP Revolte atau Richter), dari node lain. Dilakukan pengujian dengan menggunakan 4 node berbeda yang mencoba ping di saat yang bersamaan, diperoleh hasil sebagai berikut.
+
+![tesLimitConn](img/no3.png)
+
+Dari gambar tersebut, terdapat 3 node yang bisa melakukan ping ke Revolte (IP : 10.55.0.22) yaitu TurkRegion, Sein, dan GrobeForest, adapun Stark tidak bisa memperoleh hasil untuk ping-nya.
 
 ## Question 4
 > Lakukan pembatasan sehingga koneksi SSH pada Web Server hanya dapat dilakukan oleh masyarakat yang berada pada GrobeForest.
