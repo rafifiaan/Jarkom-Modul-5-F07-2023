@@ -389,6 +389,25 @@ Untuk Pembagian Subnet, IP, Perhitungan VLSM, Tree VLSM, Subnetting dan juga Rou
 ## Question 1
 > Agar topologi yang kalian buat dapat mengakses keluar, kalian diminta untuk mengkonfigurasi Aura menggunakan iptables, tetapi tidak ingin menggunakan MASQUERADE.
 
+Agar dapat mengakses keluar, biasanya kita menggunakan MASQUERADE, namun untuk memenuhi ketentuan pada soal dimana diminta tanpa MASQUERADE, kita dapat menggunakan pengaturan sebagai berikut pada node Aura
+```
+Aura_to_NAT_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+
+iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $Aura_to_NAT_IP
+```
+
+Dengan pengaturan tersebut, kita melakukan penangkapan terhadap IP pada interface eth0 milik Aura, yaitu interface yang terhubung dengan NAT, setelah itu memasukkannya ke sebuah variabel `Aura_to_NAT_IP`. Setelah itu digunakan pada opsi `--to-source` pada pengaturan di atas. Perlu diketahui bahwa IP interface eth0 milik Aura ini bersifat dinamis, maka dari itu diperlukan penggunaan variabel untuk menampung nilai IP-nya.
+
+Pengujian dapat dilakukan pada node lain dengan cara melakukan `ping google.com`. Disini pengujian dilakukan di node host TurkRegion. Sebelum melakukan perintah `ping google.com`, terlebih dahulu menjalankan perintah berikut
+```
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+```
+atau pada contoh ini, telah dibuatkan sebuah script khusus menjalankan perintah tersebut, yaitu script `echons.sh`. Setelah itu lakukan test ping ke google.com, seperti perintah berikut
+```
+ping google.com
+```
+
+Diperoleh hasil sebagai berikut
 
 ## Question 2
 > Kalian diminta untuk melakukan drop semua TCP dan UDP kecuali port 8080 pada TCP.
