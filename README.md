@@ -504,6 +504,28 @@ Dapat dilihat, setelah terlebih dahulu diuji oleh GrobeForest, lalu diuji lagi d
 ## Question 5
 > Selain itu, akses menuju WebServer hanya diperbolehkan saat jam kerja yaitu Senin-Jumat pada pukul 08.00-16.00.
 
+Untuk melakukan pembatasan berdasarkan waktu tersebut, diperlukan modul `time`. Pengaturan perizinan akses hanya pada jam kerja ini dimasukkan pada node-node web server, yaitu Sein dan Stark. Berikut pengaturannya
+
+```
+iptables -F
+
+# Izinkan koneksi SSH dari GrobeForest ke Sein dan/atau Stark pada jam kerja
+# ketahui terlebih dahulu IP dari GrobeForest karena IP-nya dinamis - berubah setiap reload node
+iptables -A INPUT -p tcp --dport 22 -s 10.55.4.4 -m time --timestart 08:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+# Tolak koneksi SSH dari GrobeForest ke Sein dan/atau Stark di luar jam kerja
+iptables -A INPUT -p tcp --dport 22 -s 10.55.4.4 -j DROP
+```
+
+Pengaturan tersebut melakukan ACCEPT hanya pada hari kerja : Senin, Selasa, Rabu, Kamis, dan Jumat pada pukul 08:00 hingga 16:00 saja.
+
+Untuk pengujian dapat dilakukan menggunakan netcat pada node lain yang mengakses pada jam kerja, maupun di luar jam kerja. Disini dilakukan pengujian melalui GrobeForest yang mengakses pada jam kerja, diperoleh hasil sebagai berikut.
+
+![tesAcceptWorkday](img/no5a.png)
+
+Dapat dilihat, koneksi diizinkan. Adapun jika GrobeForest melakukan percobaan koneksi di luar jam kerja, diperoleh hasil sebagai berikut.
+
+![tesAcceptWorkday2](img/no5b.png)
 
 ## Question 6
 > Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
