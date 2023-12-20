@@ -527,6 +527,8 @@ Dapat dilihat, koneksi diizinkan. Adapun jika GrobeForest melakukan percobaan ko
 
 ![tesAcceptWorkday2](img/no5b.png)
 
+Dapat dilihat, koneksi dari GrobeForest tidak diterima oleh web server.
+
 ## Question 6
 > Lalu, karena ternyata terdapat beberapa waktu di mana network administrator dari WebServer tidak bisa stand by, sehingga perlu ditambahkan rule bahwa akses pada hari Senin - Kamis pada jam 12.00 - 13.00 dilarang (istirahat maksi cuy) dan akses di hari Jumat pada jam 11.00 - 13.00 juga dilarang (maklum, Jumatan rek).
 
